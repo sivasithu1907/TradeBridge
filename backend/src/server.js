@@ -60,7 +60,7 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: isProd, // requires HTTPS in production — set up via the Caddy/Nginx reverse proxy
+      secure: process.env.HTTPS_ENABLED === 'true', // requires HTTPS in production — set up via the Caddy/Nginx reverse proxy
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
     },
