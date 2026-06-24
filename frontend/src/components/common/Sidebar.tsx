@@ -67,7 +67,7 @@ export const Sidebar: React.FC = () => {
         </div>
         <div className="flex flex-col">
           <span className="font-bold text-lg tracking-tight text-[#111827] leading-none">TheDreamV</span>
-          <span className="text-[10px] tracking-widest uppercase font-semibold text-[#EB5D0B] mt-1">Freight Market</span>
+          <span className="text-[10px] tracking-widest uppercase font-semibold text-[#EB5D0B] mt-1">TRADE BRIDGE>
         </div>
       </div>
 
