@@ -1,0 +1,6 @@
+{
+  "name": "TheDreamV Global Freight Marketplace",
+  "description": "B2B Freight Marketplace Platform connecting Importers and Freight Forwarders globally",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

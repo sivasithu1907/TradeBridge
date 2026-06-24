@@ -1,0 +1,50 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: tdv_marketplace
+      POSTGRES_USER: tdv_app
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tdv_app -d tdv_marketplace"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    # Not exposed to the host on purpose -- only the backend container
+    # talks to Postgres, over the internal Docker network. The database
+    # is never reachable from outside this machine.
+
+  backend:
+    build: ./backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://tdv_app:${POSTGRES_PASSWORD}@postgres:5432/tdv_marketplace
+      PORT: 4000
+      NODE_ENV: production
+      SESSION_SECRET: ${SESSION_SECRET}
+      CORS_ORIGINS: ${CORS_ORIGINS}
+      UPLOAD_DIR: /app/uploads
+      MAX_UPLOAD_SIZE_MB: 15
+    volumes:
+      - uploads_data:/app/uploads
+    # Not exposed to the host directly -- nginx proxies /api to it over
+    # the internal Docker network (see frontend/nginx.conf). Only the
+    # frontend container's port 80 is published to the host.
+
+  frontend:
+    build: ./frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "8080:80"
+
+volumes:
+  postgres_data:
+  uploads_data:
